@@ -16,10 +16,8 @@ public class JwtProvider {
 
     private final SecretKey key;
 
-    public JwtProvider(@Value("${jwt.secret}") String secret) {
-        this.key = Keys.hmacShaKeyFor(
-                Decoders.BASE64URL.decode(secret)
-        );
+    public JwtProvider(SecretKey jwtSecretKey) {
+        this.key = jwtSecretKey;
     }
 
     public String generate(String username) {
@@ -27,7 +25,7 @@ public class JwtProvider {
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(
-                        System.currentTimeMillis() + 3600000
+                        System.currentTimeMillis() + 3600000 // 1시간 돌아간다
                 ))
                 .signWith(key)
                 .compact();
