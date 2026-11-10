@@ -1,3 +1,6 @@
 spring:
   application:
     name: Java-Performance-Task
+
+jwt:
+  secret: ${JWT_SECRET}
