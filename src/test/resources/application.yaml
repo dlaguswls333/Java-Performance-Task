@@ -1,0 +1,6 @@
+jwt:
+  secret: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+spring:
+  jpa:
+    defer-datasource-initialization: true
