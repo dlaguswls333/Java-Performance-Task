@@ -1,5 +1,6 @@
 package com.dgsw.javaperformancetask.product.controller;
 
+import com.dgsw.javaperformancetask.common.response.ResponseApi;
 import com.dgsw.javaperformancetask.product.dto.ProductCreateRequestDto;
 import com.dgsw.javaperformancetask.product.dto.ProductResponseDto;
 import com.dgsw.javaperformancetask.product.dto.ProductSearchRequestDto;
@@ -29,46 +30,55 @@ public class ProductController {
 
     // 상품을 등록한다.
     @PostMapping
-    public ResponseEntity<ProductResponseDto> createProduct(
+    public ResponseEntity<ResponseApi<ProductResponseDto>> createProduct(
             @RequestBody ProductCreateRequestDto request
     ) {
         ProductResponseDto response = productService.createProduct(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseApi.success("상품 등록 성공", response));
     }
 
     // 전체 상품을 조회한다.
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> readAllProducts() {
-        return ResponseEntity.ok(productService.readAllProducts());
+    public ResponseEntity<ResponseApi<List<ProductResponseDto>>> readAllProducts() {
+        return ResponseEntity.ok(
+                ResponseApi.success("상품 전체 조회 성공", productService.readAllProducts())
+        );
     }
 
     // 상품명을 기준으로 상품을 검색한다.
     @GetMapping("/search")
-    public ResponseEntity<List<ProductResponseDto>> searchProducts(
+    public ResponseEntity<ResponseApi<List<ProductResponseDto>>> searchProducts(
             @ModelAttribute ProductSearchRequestDto request
     ) {
-        return ResponseEntity.ok(productService.searchProducts(request));
+        return ResponseEntity.ok(
+                ResponseApi.success("상품 검색 성공", productService.searchProducts(request))
+        );
     }
 
     // 상품 하나를 조회한다.
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> readProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.readProduct(id));
+    public ResponseEntity<ResponseApi<ProductResponseDto>> readProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                ResponseApi.success("상품 상세 조회 성공", productService.readProduct(id))
+        );
     }
 
     // 상품 정보를 수정한다.
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(
+    public ResponseEntity<ResponseApi<ProductResponseDto>> updateProduct(
             @PathVariable Long id,
             @RequestBody ProductUpdateRequestDto request
     ) {
-        return ResponseEntity.ok(productService.updateProduct(id, request));
+        return ResponseEntity.ok(
+                ResponseApi.success("상품 수정 성공", productService.updateProduct(id, request))
+        );
     }
 
     // 상품을 삭제한다.
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<ResponseApi<Void>> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ResponseApi.success("상품 삭제 성공", null));
     }
 }
