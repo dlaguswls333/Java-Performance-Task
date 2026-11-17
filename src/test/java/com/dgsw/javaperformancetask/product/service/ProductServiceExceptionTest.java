@@ -9,6 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import com.dgsw.javaperformancetask.common.exception.CustomException;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
@@ -27,7 +29,7 @@ class ProductServiceExceptionTest {
         given(productRepository.findById(999L)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> productService.readProduct(999L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CustomException.class)
                 .hasMessage("상품을 찾을 수 없습니다.");
     }
 }

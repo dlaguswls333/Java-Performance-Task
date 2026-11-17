@@ -6,6 +6,8 @@ import com.dgsw.javaperformancetask.product.dto.ProductSearchRequestDto;
 import com.dgsw.javaperformancetask.product.dto.ProductUpdateRequestDto;
 import com.dgsw.javaperformancetask.product.entity.ProductEntity;
 import com.dgsw.javaperformancetask.product.repository.ProductRepository;
+import com.dgsw.javaperformancetask.common.exception.CustomException;
+import com.dgsw.javaperformancetask.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +78,6 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductEntity findProduct(Long id) {
         return productRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 }
