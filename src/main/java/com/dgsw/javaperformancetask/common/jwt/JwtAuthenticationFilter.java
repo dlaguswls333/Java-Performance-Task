@@ -1,7 +1,6 @@
 package com.dgsw.javaperformancetask.common.jwt;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,44 +14,24 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Component
-public class JwtAuthenticationFilter
-        extends OncePerRequestFilter {
-
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
-
-    public JwtAuthenticationFilter(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
+    public JwtAuthenticationFilter(JwtProvider jwtProvider) { this.jwtProvider = jwtProvider; }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain chain
-    ) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain chain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-
         if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-
             try {
-                Claims claims = jwtProvider.parse(token);
-
-                var auth = new UsernamePasswordAuthenticationToken(
-                        claims.getSubject(),
-                        null,
-                        Collections.emptyList()
-                );
-
-                SecurityContextHolder.getContext()
-                        .setAuthentication(auth);
-
-            } catch (JwtException | IllegalArgumentException e) {
+                Claims claims = jwtProvider.parseAccessToken(header.substring(7));
+                var authentication = new UsernamePasswordAuthenticationToken(
+                        claims.getSubject(), null, Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (RuntimeException e) {
                 SecurityContextHolder.clearContext();
             }
         }
-
         chain.doFilter(request, response);
     }
 }
