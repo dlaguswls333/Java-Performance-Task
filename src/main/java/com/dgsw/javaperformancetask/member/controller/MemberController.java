@@ -30,13 +30,15 @@ public class MemberController {
         return memberService.refresh(req);
     }
 
-    @PutMapping
-    public MemberDto.PutResponse put(Authentication authentication, @Valid @RequestBody MemberDto.PutRequest req) {
-        return memberService.put(authentication.getName(), req);
+    @PutMapping("/edit/{id}")
+    public MemberDto.PutResponse put(@PathVariable Long id, Authentication authentication,
+                                    @Valid @RequestBody MemberDto.PutRequest req) {
+        return memberService.put(id, authentication.getName(), req);
     }
 
-    @DeleteMapping
-    public MemberDto.DeleteResponse delete(Authentication authentication, @Valid @RequestBody MemberDto.DeleteRequest req) {
-        return memberService.delete(authentication.getName(), req);
+    @DeleteMapping("/delete/{id}")
+    public MemberDto.DeleteResponse delete(@PathVariable Long id, Authentication authentication,
+                                          @Valid @RequestBody MemberDto.DeleteRequest req) {
+        return memberService.delete(id, authentication.getName(), req);
     }
 }
