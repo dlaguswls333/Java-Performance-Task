@@ -1,6 +1,10 @@
 spring:
   application:
     name: Java-Performance-Task
+  jpa:
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
 
 jwt:
   secret: ${JWT_SECRET}
