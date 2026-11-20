@@ -1,6 +1,7 @@
 package com.dgsw.javaperformancetask.common.response;
 
 public record ResponseApi<T>(boolean success, String message, T data) {
+
     public static <T> ResponseApi<T> success(String message, T data) {
         return new ResponseApi<>(true, message, data);
     }
