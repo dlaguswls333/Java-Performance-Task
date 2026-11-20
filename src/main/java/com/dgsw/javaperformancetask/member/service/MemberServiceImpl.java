@@ -55,15 +55,15 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberDto.PutResponse put(String username, MemberDto.PutRequest req) {
-        Member member = findMember(username);
+    public MemberDto.PutResponse put(Long id, String username, MemberDto.PutRequest req) {
+        Member member = findMember(id, username);
         member.setPassword(passwordEncoder.encode(req.password()));
         return new MemberDto.PutResponse(member.getId(), member.getUsername());
     }
 
     @Override
-    public MemberDto.DeleteResponse delete(String username, MemberDto.DeleteRequest req) {
-        Member member = findMember(username);
+    public MemberDto.DeleteResponse delete(Long id, String username, MemberDto.DeleteRequest req) {
+        Member member = findMember(id, username);
         if (!passwordEncoder.matches(req.password(), member.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
         }
@@ -71,8 +71,12 @@ public class MemberServiceImpl implements MemberService {
         return new MemberDto.DeleteResponse("회원 탈퇴가 완료되었습니다.");
     }
 
-    private Member findMember(String username) {
-        return memberRepository.findByUsername(username)
+    private Member findMember(Long id, String username) {
+        Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        if (!member.getUsername().equals(username)) {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
+        return member;
     }
 }
